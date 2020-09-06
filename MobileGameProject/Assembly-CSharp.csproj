@@ -52,8 +52,8 @@
     <UnityVersion>2020.1.4f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\openMenu.cs" />
     <Compile Include="Assets\Scripts\mainDuck.cs" />
-    <Compile Include="Assets\Scripts\openUpgradeMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
