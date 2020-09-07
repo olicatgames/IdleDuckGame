@@ -13,10 +13,17 @@ public class mainDuck : MonoBehaviour
 
     public float money;
     public float onClickMoney;
+    public float onAutoMoney;
     public float moneyInterval;
 
+    public Sprite duckAnim;
+    public Sprite baseAnim;
 
     private AudioSource quack;
+
+    public GameObject upgradeButton;
+
+    public bool firstBuy = true;
 
     // Start is called before the first frame update
     void Start()
@@ -26,8 +33,7 @@ public class mainDuck : MonoBehaviour
 
         duck.onClick.AddListener(DuckClick);
 
-        StartCoroutine(AutomationMoney(moneyInterval));
-        StartCoroutine(InterRepFillProg(moneyInterval));
+
     }
 
     // Update is called once per frame
@@ -41,27 +47,43 @@ public class mainDuck : MonoBehaviour
 
     }
 
-    IEnumerator AutomationMoney(float moneyInt)
+    public IEnumerator AutomationMoney()
     {
-        while (true)
+        while (true && !firstBuy)
         {
+                yield return new WaitForSeconds(moneyInterval);
+                intervalRep.fillAmount = 0;
+                Debug.Log("AutoQuack");
+                money = money + onAutoMoney;
+                moneyCount.text = "$" + money.ToString("F2");
+                quack.Play();
+                StartCoroutine(AnimateDuck());
 
-            yield return new WaitForSeconds(moneyInt);
-            intervalRep.fillAmount = 0;
-        //    StartCoroutine(InterRepFillProg(moneyInterval));
-            Debug.Log("AutoQuack");
-            moneyCount.text = "$" + money.ToString("F2");
-            this.GetComponent<Button>().onClick.Invoke();        }
+        }
+    }
+
+    public void startAuto()
+    {
+        firstBuy = false;
+        StartCoroutine(AutomationMoney());
+        StartCoroutine(InterRepFillProg());
     }
 
 
-    IEnumerator InterRepFillProg(float fillProg)
+    public IEnumerator InterRepFillProg()
     {
-        while(intervalRep.fillAmount < 1){
-            intervalRep.fillAmount = intervalRep.fillAmount + 0.005f;
-            yield return new WaitForSeconds(moneyInterval / 200f);
+        while(true && !firstBuy){
+                intervalRep.fillAmount = intervalRep.fillAmount + 0.0053f;
+                yield return new WaitForSeconds(moneyInterval / 200f);
 
         }
+    }
+
+    IEnumerator AnimateDuck()
+    {
+        this.GetComponent<Image>().sprite = duckAnim;
+        yield return new WaitForSeconds(0.1f);
+        this.GetComponent<Image>().sprite = baseAnim;
     }
 }
 
